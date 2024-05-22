@@ -1,7 +1,4 @@
-
-
 import gym
-import pybullet_envs
 import numpy as np
 from collections import deque
 import torch
@@ -16,7 +13,7 @@ from agent import CQLAgent
 def get_config():
     parser = argparse.ArgumentParser(description='RL')
     parser.add_argument("--run_name", type=str, default="CQL-DQN", help="Run name, default: CQL-DQN")
-    parser.add_argument("--env", type=str, default="CartPole-v0", help="Gym environment name, default: CartPole-v0")
+    parser.add_argument("--env", type=str, default="Pendulum-v1", help="Gym environment name, default: Pendulum-v1")
     parser.add_argument("--episodes", type=int, default=400, help="Number of episodes, default: 200")
     parser.add_argument("--buffer_size", type=int, default=100_000, help="Maximal training dataset size, default: 100_000")
     parser.add_argument("--seed", type=int, default=1, help="Seed, default: 1")
@@ -34,7 +31,6 @@ def train(config):
     torch.manual_seed(config.seed)
     env = gym.make(config.env)
     
-    env.seed(config.seed)
     env.action_space.seed(config.seed)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -48,7 +44,7 @@ def train(config):
     with wandb.init(project="CQL", name=config.run_name, config=config):
         
         agent = CQLAgent(state_size=env.observation_space.shape,
-                         action_size=env.action_space.n,
+                         action_size=env.action_space.shape[0],  # 修改这里以支持连续 action space
                          device=device)
 
         wandb.watch(agent.network, log="gradients", log_freq=10)
@@ -67,7 +63,7 @@ def train(config):
             while True:
                 action = agent.get_action(state, epsilon=eps)
                 steps += 1
-                next_state, reward, done, _ = env.step(action[0])
+                next_state, reward, done, _ = env.step(action)  # 直接传递 action，因为是连续的
                 buffer.add(state, action, reward, next_state, done)
                 loss, cql_loss, bellmann_error = agent.learn(buffer.sample())
                 state = next_state
@@ -92,14 +88,14 @@ def train(config):
                        "Episode": i,
                        "Buffer size": buffer.__len__()})
 
-            if (i %10 == 0) and config.log_video:
+            if (i % 10 == 0) and config.log_video:
                 mp4list = glob.glob('video/*.mp4')
                 if len(mp4list) > 1:
                     mp4 = mp4list[-2]
                     wandb.log({"gameplays": wandb.Video(mp4, caption='episode: '+str(i-10), fps=4, format="gif"), "Episode": i})
 
             if i % config.save_every == 0:
-                save(config, save_name="CQL-DQN", model=agent.network, wandb=wandb, ep=0)
+                save(config, save_name="CQL-DQN1", model=agent.network, wandb=wandb, ep=0)
 
 if __name__ == "__main__":
     config = get_config()

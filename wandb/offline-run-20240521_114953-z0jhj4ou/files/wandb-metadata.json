@@ -1,0 +1,37 @@
+{
+    "os": "macOS-14.5-arm64-arm-64bit",
+    "python": "3.9.19",
+    "heartbeatAt": "2024-05-21T03:49:53.368796",
+    "startedAt": "2024-05-21T03:49:53.321808",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/evans/Desktop/Coding/GitHub/OfflineRL/CQL/CQL-DQN/train.py",
+    "codePathLocal": "CQL-DQN/train.py",
+    "codePath": "CQL-DQN/train.py",
+    "git": {
+        "remote": "https://github.com/BY571/CQL.git",
+        "commit": "2fd085af0f77140d2c5b593c6f3bd66466d8ac50"
+    },
+    "email": "747499281@qq.com",
+    "root": "/Users/evans/Desktop/Coding/GitHub/OfflineRL/CQL",
+    "host": "Kyles-MacBook-Pro.local",
+    "username": "evans",
+    "executable": "/Users/evans/opt/anaconda3/envs/pytorch/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 8,
+    "disk": {
+        "/": {
+            "total": 460.4317207336426,
+            "used": 403.9092102050781
+        }
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 16.0
+    }
+}

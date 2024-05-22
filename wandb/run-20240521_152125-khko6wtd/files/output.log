@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/evans/Desktop/Coding/GitHub/OfflineRL/CQL/CQL-DQN/train.py", line 51, in train
+    action_size=env.action_space.n,
+AttributeError: 'Box' object has no attribute 'n'
